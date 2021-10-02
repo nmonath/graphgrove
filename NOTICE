@@ -1,0 +1,15 @@
+graphgrove
+
+This software is Copyright (C) 2021 SCC authors
+This software is Copyright (C) 2021 Llama authors
+This software is Copyright (C) 2021 SGTree authors
+and is licensed under the
+terms of the Apache License, Version 2.0 (see LICENSE.txt) or (at your option) any subsequent version.
+
+The license is approved by the Open Source Initiative, and is available
+from their website at http://www.opensource.org.
+
+THIRD PARTY COMPONENTS
+
+Eigen is Free Software. Starting from the 3.1.1 version, it is licensed under the MPL2, which is a simple weak copyleft license. Common questions about the MPL2 are answered in the official MPL2 FAQ.
+
