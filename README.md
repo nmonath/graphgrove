@@ -4,7 +4,7 @@
 
 ## Install
 
-Linux wheels available on [pypi](https://pypi.org/project/graphgrove/):
+Linux wheels available (python >=3.8) on [pypi](https://pypi.org/project/graphgrove/):
 
 ```
 pip install graphgrove
@@ -13,7 +13,7 @@ pip install graphgrove
 Building from source:
 
 ```
-conda create -n gg python=3.7
+conda create -n gg python=3.8
 conda activate gg
 pip install numpy
 make
@@ -22,7 +22,7 @@ make
 To build your own wheel:
 
 ```
-conda create -n gg python=3.7
+conda create -n gg python=3.8
 conda activate gg
 pip install numpy
 make
