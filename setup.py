@@ -69,7 +69,7 @@ llamac_module = Extension('llamac',
 
 setuptools.setup(
     name="graphgrove",
-    version="0.0.4",
+    version="0.0.5",
     author="Nicholas Monath",
     author_email="nmonath@cs.umass.edu",
     description="Building flat, tree, and DAG structured clusterings.",
