@@ -69,7 +69,7 @@ llamac_module = Extension('llamac',
 
 setuptools.setup(
     name="graphgrove",
-    version="0.0.5",
+    version="0.0.6",
     author="Nicholas Monath",
     author_email="nmonath@cs.umass.edu",
     description="Building flat, tree, and DAG structured clusterings.",
@@ -85,7 +85,7 @@ setuptools.setup(
     package_dir={'graphgrove': 'graphgrove'},
     packages=['graphgrove'],
     cmdclass={'build_ext': build_ext},
-    install_requires=['numpy>=1.13.1', 'scipy>=0.17', 'tqdm', 'absl-py'],
+    install_requires=['numpy>=1.21', 'scipy>=0.17', 'tqdm', 'absl-py'],
     ext_modules = [sgtreec_module, covertreec_module, scc_module, llamac_module],
     python_requires=">=3.6",
 )
