@@ -7,7 +7,7 @@
 Linux wheels available on [pypi](https://pypi.org/project/graphgrove/):
 
 ```
-pip install graphgrove==0.0.3
+pip install graphgrove
 ```
 
 Building from source:
