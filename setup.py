@@ -87,5 +87,5 @@ setuptools.setup(
     cmdclass={'build_ext': build_ext},
     install_requires=['numpy>=1.21', 'scipy>=0.17', 'tqdm', 'absl-py'],
     ext_modules = [sgtreec_module, covertreec_module, scc_module, llamac_module],
-    python_requires=">=3.6",
+    python_requires=">=3.8",
 )

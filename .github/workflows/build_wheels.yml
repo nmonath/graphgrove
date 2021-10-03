@@ -44,7 +44,7 @@ jobs:
           CIBW_MANYLINUX_S390X_IMAGE: manylinux2010
           CIBW_MANYLINUX_PYPY_AARCH64_IMAGE: manylinux2010
           CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2010
-          CIBW_PROJECT_REQUIRES_PYTHON: "<=3.9,>=3.6"
+          CIBW_PROJECT_REQUIRES_PYTHON: "<=3.9,>=3.8"
           CIBW_BUILD: 'cp*-manylinux_x86_64'
         
       - uses: actions/upload-artifact@v2
