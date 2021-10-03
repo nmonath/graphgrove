@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: make clean
+        run: make clean
+      - name: make dir compile
+        run: make dir compile
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.1.2
+        env:
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_I686_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PPC64LE_IMAGE: manylinux2010
+          CIBW_MANYLINUX_S390X_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PYPY_AARCH64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2010
