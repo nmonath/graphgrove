@@ -1,9 +1,9 @@
-![GraphGrove Logo](logo.png)
+![GraphGrove Logo](https://github.com/nmonath/graphgrove/blob/main/logo.png)
 
 
 ## Install
 
-We have manylinux_2_24 wheels available: 
+Linux wheels available on [pypi](https://pypi.org/project/graphgrove/):
 
 ```
 pip install graphgrove==0.0.3
