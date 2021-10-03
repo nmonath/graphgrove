@@ -1,0 +1,27 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.1.2
+        env:
+          CIBW_BEFORE_BUILD: "pip install setuptools numpy==1.19 build && make"
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_I686_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PPC64LE_IMAGE: manylinux2010
+          CIBW_MANYLINUX_S390X_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PYPY_AARCH64_IMAGE: manylinux2010
+          CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2010
