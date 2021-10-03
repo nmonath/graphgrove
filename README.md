@@ -3,11 +3,18 @@
 
 ## Install
 
+We have manylinux_2_24 wheels available: 
+
+```
+pip install graphgrove==0.0.3
+```
+
 Building from source:
 
 ```
 conda create -n gg python=3.7
 conda activate gg
+pip install numpy
 make
 ```
 
@@ -16,6 +23,7 @@ To build your own wheel:
 ```
 conda create -n gg python=3.7
 conda activate gg
+pip install numpy
 make
 pip install build
 python -m build --wheel
