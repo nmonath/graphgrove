@@ -1,5 +1,6 @@
-![GraphGrove Logo](https://github.com/nmonath/graphgrove/blob/main/logo.png)
-
+<div align="center">
+  <img src="https://github.com/nmonath/graphgrove/blob/main/logo.png)">
+</div>
 
 ## Install
 
