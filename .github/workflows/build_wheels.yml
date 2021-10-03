@@ -44,7 +44,7 @@ jobs:
           CIBW_MANYLINUX_S390X_IMAGE: manylinux2010
           CIBW_MANYLINUX_PYPY_AARCH64_IMAGE: manylinux2010
           CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2010
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.7 && <=3.9"
+          CIBW_PROJECT_REQUIRES_PYTHON: "==3.7"
         
       - uses: actions/upload-artifact@v2
         with:
@@ -54,7 +54,7 @@ jobs:
     needs: [build_wheels]
     runs-on: ubuntu-latest
     # upload to PyPI on every tag starting with 'v'
-    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
+    # if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
     # alternatively, to publish when a GitHub Release is created, use the following rule:
     # if: github.event_name == 'release' && github.event.action == 'published'
     steps:
