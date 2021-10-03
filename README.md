@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/nmonath/graphgrove/blob/main/logo.png">
+  <img src="https://raw.githubusercontent.com/nmonath/graphgrove/main/logo.png">
 </div>
 
 ## Install
