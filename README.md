@@ -4,7 +4,7 @@
 
 ## Install
 
-Linux wheels available (python >=3.8) on [pypi](https://pypi.org/project/graphgrove/):
+Linux wheels available (python >=3.6) on [pypi](https://pypi.org/project/graphgrove/):
 
 ```
 pip install graphgrove
