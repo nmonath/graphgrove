@@ -34,7 +34,7 @@ python -m build --wheel
 
 ## Examples
 
-Toy examples of [clustering](https://github.com/nmonath/graphgrove/blob/main/examples/clustering.py), [DAG-structured clustering](https://github.com/nmonath/graphgrove/blob/main/examples/dag_clustering.py),  and [nearest neighbor search](https://github.com/nmonath/graphgrove/blob/main/examples/nearest_neighbor_search.py) are available.
+Toy examples of [clustering](https://github.com/nmonath/graphgrove/examples/clustering.py), [DAG-structured clustering](https://github.com/nmonath/graphgrove/examples/dag_clustering.py),  and [nearest neighbor search](https://github.com/nmonath/graphgrove/examples/nearest_neighbor_search.py) are available.
 
 At a high level, incremental clustering can be done as:
 
