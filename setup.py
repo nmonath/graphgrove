@@ -85,7 +85,7 @@ setuptools.setup(
     package_dir={'graphgrove': 'graphgrove'},
     packages=['graphgrove'],
     cmdclass={'build_ext': build_ext},
-    install_requires=['numpy>=1.21', 'scipy>=0.17', 'tqdm', 'absl-py'],
+    install_requires=['numpy', 'scipy', 'tqdm', 'absl-py'],
     ext_modules = [sgtreec_module, covertreec_module, scc_module, llamac_module],
     python_requires=">=3.6",
 )
