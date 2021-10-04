@@ -34,7 +34,7 @@ python -m build --wheel
 
 ## Examples
 
-Toy examples of [clustering](examples/clustering.py) and [nearest neighbor search](examples/nearest_neighbor_search.py) are available. 
+Toy examples of [clustering](examples/clustering.py), [DAG-structured clustering](examples/dag_clustering.py),  and [nearest neighbor search](examples/nearest_neighbor_search.py) are available. 
 
 At a high level, incremental clustering can be done as:
 
