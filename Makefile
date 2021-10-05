@@ -1,6 +1,6 @@
 # Modified from Makefile of CoverTree
 # https://github.com/manzilzaheer/CoverTree
-# 
+#
 # Copyright (c) 2017 Manzil Zaheer All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ CLEAN_PROGS = $(subst $(CURR_DIR)/src/,clean-,$(SOURCES))
 
 CTYPE = gcc
 
-.PHONY: all dir compile $(SOURCES) 
+.PHONY: all dir compile $(SOURCES)
 
 all: dir compile py
 
@@ -45,7 +45,7 @@ dir:
 	@echo Setting up directories
 	@mkdir -p $(BUILDDIR)
 	@mkdir -p dist
-	
+
 
 compile: $(SOURCES)
 
@@ -65,3 +65,15 @@ $(PROGS): % : $(CURR_DIR)/src/%/makefile
 $(CLEAN_PROGS): clean-% : $(CURR_DIR)/src/%/makefile
 	rm -rf build/$(subst clean-,,$@)
 	rm -rf dist/$(subst clean-,,$@)
+
+
+docs-build:
+	cp README.md homepage/_includes/
+	cd homepage && bundle exec jekyll build -d ../docs/build/html
+	sphinx-build -b html docs/source/ docs/build/html/documentation
+
+docs-serve: docs-build
+	cd homepage && bundle exec jekyll serve -d ../docs/build/html --skip-initial-build
+
+docs-deploy: docs-build
+	cd docs && make gh-deploy
