@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+
 from absl import logging
 import numpy as np
 from scipy.sparse import coo_matrix
@@ -256,15 +257,14 @@ class Cosine_FaissFlat(Index):
         return results[0].astype(np.float32), results[1].astype(np.int32)
 
 class Cosine_FaissHNSW(Index):
-
     def __init__(self, k,
                  max_degree=128,
                  efSearch=128,
                  efConstruction=200,
                  add_noise=True,
                  noise_amount=1e-6,
-                 assume_unit_norm=True):
-        super(FaissHNSW, self).__init__(k)
+                 assume_unit_normed=True):
+        super(Cosine_FaissHNSW, self).__init__(k)
         self.index = None
         self.row = None
         self.col = None
@@ -276,7 +276,7 @@ class Cosine_FaissHNSW(Index):
         self.efSearch = efSearch
         self.efConstruction = efConstruction
         self.noise_amount = noise_amount
-        self.assume_unit_norm = assume_unit_norm
+        self.assume_unit_normed = assume_unit_normed
 
     def build(self, vectors):
         t0 = time.time()
@@ -285,6 +285,7 @@ class Cosine_FaissHNSW(Index):
         self.num_points += vectors.shape[0]
         if not self.assume_unit_normed:
             vectors = unit_norm(vectors)
+        import faiss
         self.index = faiss.IndexHNSWFlat(vectors.shape[1], self.max_degree)
         self.index.hnsw.efConstruction = self.efConstruction
         self.index.hnsw.efSearch = self.efSearch
