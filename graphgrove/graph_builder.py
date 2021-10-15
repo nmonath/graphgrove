@@ -327,5 +327,5 @@ class Cosine_FaissHNSW(Index):
         if not self.assume_unit_normed:
             query = unit_norm(query)
         results = self.index.search(query, min(self.k, self.num_points))
-        return (2-results[0].astype(np.float32)**2)/2, results[1].astype(np.int32)
+        return (2-results[0].astype(np.float32))/2, results[1].astype(np.int32)
 
