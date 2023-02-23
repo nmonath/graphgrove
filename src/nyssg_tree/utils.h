@@ -222,7 +222,7 @@ namespace utils
         {
             res = pointType::Zero(pMatrix.cols());
             for(size_t i = left; i<right; ++i)
-                res[i] = (pMatrix.col(i)-vec).norm();
+                res[i] = std::exp(-pMatrix.col(i).dot(vec));
         }
 
     public:

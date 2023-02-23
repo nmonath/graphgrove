@@ -1,5 +1,6 @@
 """
 Copyright (c) 2021 The authors of SG Tree All rights reserved.
+Copyright (c) 2023 The authors of NysSG Tree All rights reserved.
 
 Initially modified from cover_tree.py of CoverTree
 https://github.com/manzilzaheer/CoverTree
@@ -21,7 +22,8 @@ limitations under the License.
 import pickle
 import numpy as np
 
-import sgtreec
+import nyssgtreec as sgtreec
+
 
 class Node(object):
   """SGTree node from c++."""
@@ -49,8 +51,8 @@ class Node(object):
     else:
       print('Cannot set {}'.format(name))
 
-class NNS_L2(object):
-  """SGTree Class for NN search in Euclidean distance."""
+class NNS_Nys(object):
+  """NysSGTree Class for NN search with Nystrom Embeddings."""
 
   def __init__(self, this):
     if isinstance(this, tuple):
@@ -73,8 +75,8 @@ class NNS_L2(object):
     return sgtreec.size(self.this)
 
   @classmethod
-  def from_matrix(cls, points, trunc=-1, use_multi_core=-1):
-    ptr = sgtreec.new(points, trunc, use_multi_core)
+  def from_matrix(cls, points, pointsProj, trunc=-1, use_multi_core=-1):
+    ptr = sgtreec.new(points, pointsProj, trunc, use_multi_core)
     return cls(ptr)
 
   @classmethod
@@ -145,154 +147,60 @@ class NNS_L2(object):
   
   def get_root(self):
     return Node(sgtreec.get_root(self.this))
+  
+  def set_num_descendants(self):
+    return sgtreec.set_num_descendants(self.this)
 
-class MIPS(NNS_L2):
-  """SGTree Class for maximum inner product search."""
+  def rejectionSample(self, points, num_samples=10, use_multi_core=-1,
+                      return_points=False):
+    return sgtreec.rejectionSample(self.this, points, num_samples,
+                                   use_multi_core, return_points)
 
-  def __init__(self, this, phi2):
-    super(MIPS, self).__init__(this)
-    self.phi2 = phi2
+  def mhClusterSample(self, points,
+                            k=10,
+                            until_level=-10,
+                            beamSize=100,
+                            num_chains=10,
+                            chain_length=10,
+                            use_multi_core=-1,
+                            return_points=False):
+    return sgtreec.mhClusterSample(self.this, points, k,
+                                   use_multi_core, return_points, 
+                                   until_level, beamSize, num_chains, 
+                                   chain_length)
 
-  def __reduce__(self):
-    buff = self.serialize()
-    return (MIPS.from_string, (buff, self.phi2))
+  def mhClusterSampleHeuristic1(self,
+                               points,
+                               num_samples=10,
+                               until_level=-10,
+                               beamSize=100,
+                               num_chains=10,
+                               use_multi_core=-1,
+                               return_points=False):
+    return sgtreec.mhClusterSampleHeuristic1(self.this, points, num_samples,
+                                   use_multi_core, return_points, 
+                                   until_level, beamSize, num_chains)
     
-  def __len__(self):
-    return sgtreec.size(self.this)
+  def mhClusterSampleHeuristic2(self,
+                               points,
+                               num_samples=10,
+                               until_level=-10,
+                               beamSize=100,
+                               num_chains=10,
+                               repeats=10,
+                               use_multi_core=-1,
+                               return_points=False):
+    return sgtreec.mhClusterSampleHeuristic2(self.this, points, num_samples,
+                                   use_multi_core, return_points,
+                                   until_level, beamSize, num_chains, repeats)
 
-  @classmethod
-  def from_matrix(cls, points, trunc=-1, user_max=None, use_multi_core=-1):
-    # Find norm of points
-    norm2 = (points**2).sum(1)
-    phi2 = np.max(norm2) if user_max is None else user_max
-    modified_points = np.hstack((points, np.sqrt(phi2 - norm2)[:, np.newaxis]))
-    ptr = sgtreec.new(modified_points, trunc, use_multi_core)
-    return cls(ptr, phi2)
+  def update(self, points, points_proj, level):
+    self.update_vector(points, points_proj)
+    self.rebuild_level(level)
 
-  @classmethod
-  def from_string(cls, buff, phi2):
-    ptr = sgtreec.deserialize(buff)
-    return cls(ptr, phi2)
+  def rebuild_level(self, level):
+    sgtreec.rebuildLevel(self.this, level)
 
-  def insert(self, point, uid=None, use_multi_core=-1):
-    if len(point.shape) == 1:
-      norm2 = np.dot(point, point)
-      modified_point = np.append(point, np.sqrt(self.phi2 - norm2))
-      return sgtreec.insert(self.this, modified_point, -1 if uid is None else uid)
-    elif len(point.shape) == 2:
-      if uid is None:
-        N = sgtreec.size(self.this)
-        uid = np.arange(N, N + point.shape[0])
-      norm2 = (point**2).sum(1)
-      modified_points = np.hstack((point, np.sqrt(self.phi2 - norm2)[:, np.newaxis]))
-      return sgtreec.batchinsert(self.this, modified_points, uid, use_multi_core)
-    else:
-      print("Points to be inserted should be 1D or 2D matrix!")
-
-  def remove(self, point):
-    norm2 = np.dot(point, point)
-    modified_point = np.append(point, np.sqrt(self.phi2 - norm2))
-    return sgtreec.remove(self.this, modified_point)
-
-  def NearestNeighbour(self, points, use_multi_core=-1, return_points=False):
-    # print('use_multi_core = %s' % use_multi_core) 
-    modified_points = np.hstack(
-        (points, np.zeros((points.shape[0], 1), dtype=points.dtype)))
-    ret_val = list(
-        sgtreec.NearestNeighbour(self.this, modified_points, use_multi_core,
-                                    return_points))
-    norm2 = (points**2).sum(1)
-    ret_val[1] = 0.5 * (self.phi2 + norm2 - ret_val[1]**2)
-    return tuple(ret_val)
-
-  def kNearestNeighbours(self,
-                         points,
-                         k=10,
-                         use_multi_core=-1,
-                         return_points=False):
-    """main nearest neighbor function."""
-    print('use_multi_core = %s' % use_multi_core) 
-    modified_points = np.hstack(
-        (points, np.zeros((points.shape[0], 1), dtype=points.dtype)))
-    import time 
-    st_t = time.time()
-    ret_val = list(
-        sgtreec.kNearestNeighbours(self.this, modified_points, k,
-                                      use_multi_core, return_points))
-    st_e = time.time()
-    import sys
-    print('knn %s' % (st_e-st_t))
-    sys.stdout.flush()
-    norm2 = (points**2).sum(1)[:, np.newaxis]
-    ret_val[1] = 0.5 * (self.phi2 + norm2 - ret_val[1]**2)
-    return tuple(ret_val)
-
-  def RangeSearch(self,
-                  points,
-                  r=1.0,
-                  use_multi_core=-1,
-                  return_points=False):
-    raise NotImplementedError('Range for MIPS not clear')
-
-class MCSS(NNS_L2):
-  """SGTree Class for NN search in cosine distance."""
-
-  def __init__(self, this):
-    super(MCSS, self).__init__(this)
-
-  def __reduce__(self):
-    buff = self.serialize()
-    return (MCSS.from_string, (buff,))
-
-  @classmethod
-  def from_matrix(cls, points, trunc=-1, use_multi_core=-1):
-    # Find norm of points
-    norm = np.sqrt((points**2).sum(1))
-    modified_points = points / norm[:, np.newaxis]
-    ptr = sgtreec.new(modified_points, trunc, use_multi_core)
-    return cls(ptr)
-
-  @classmethod
-  def from_string(cls, buff):
-    ptr = sgtreec.deserialize(buff)
-    return cls(ptr)
-
-  def insert(self, point):
-    norm = np.sqrt(np.dot(point, point))
-    modified_point = point / norm
-    return sgtreec.insert(self.this, modified_point)
-
-  def remove(self, point):
-    norm = np.sqrt(np.dot(point, point))
-    modified_point = point / norm
-    return sgtreec.remove(self.this, modified_point)
-
-  def NearestNeighbour(self, points, use_multi_core=-1, return_points=False):
-    print('use_multi_core = %s' % use_multi_core) 
-    ret_val = list(
-        sgtreec.NearestNeighbour(self.this, points, use_multi_core,
-                                    return_points))
-    norm = np.sqrt((points**2).sum(1))
-    ret_val[1] = 0.5 * (1.0 / norm + norm - ret_val[1]**2 / norm)
-    return tuple(ret_val)
-
-  def kNearestNeighbours(self,
-                         points,
-                         k=10,
-                         use_multi_core=-1,
-                         return_points=False):
-    """main nearest neighbor function."""
-    print('use_multi_core = %s' % use_multi_core) 
-    ret_val = list(
-        sgtreec.kNearestNeighbours(self.this, points, k, use_multi_core,
-                                      return_points))
-    norm = np.sqrt((points**2).sum(1))[:, np.newaxis]
-    ret_val[1] = 0.5 * (1.0 / norm + norm - ret_val[1]**2 / norm)
-    return tuple(ret_val)
-
-  def RangeSearch(self,
-                  points,
-                  r=1.0,
-                  use_multi_core=-1,
-                  return_points=False):
-    raise NotImplementedError('Range for MIPS not clear')
+  def update_vector(self, points, points_proj):
+    return sgtreec.updateVectors(self.this, points, points_proj)
+  

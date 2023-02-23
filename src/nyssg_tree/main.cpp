@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021 The authors of SG Tree All rights reserved.
+ * Copyright (c) 2023 The authors of NysSG Tree All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-# include "sg_tree.h"
+# include "nyssg_tree.h"
 # include "utils.h"
 
 int main(int argv, char** argc)
