@@ -42,7 +42,6 @@ class Cosine_SCC(object):
     self.hnsw_max_degree = hnsw_max_degree
     self.hnsw_ef_search = hnsw_ef_search
     self.hnsw_ef_construction = hnsw_ef_construction
-    
     if self.index_name.lower() == 'cosine_covertree':
       self.index = graph_builder.Cosine_CoverTree(self.k, self.cores)
     elif self.index_name.lower() == 'cosine_sgtree':
@@ -53,7 +52,6 @@ class Cosine_SCC(object):
      self.index = graph_builder.Cosine_FaissFlat(self.k)
     elif self.index_name.lower() == 'cosine_faisshnsw':
       self.index = graph_builder.Cosine_FaissHNSW(self.k, self.hnsw_max_degree, self.hnsw_ef_search, self.hnsw_ef_construction)
-    
     self.scc = SCC.init(self.thresholds, self.cores, self.cc_alg, self.par_minimum, self.verbosity)
 
 #   def __del__(self):
